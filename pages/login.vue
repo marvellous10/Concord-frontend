@@ -1,5 +1,10 @@
 <script setup lang="ts">
 
+useSeoMeta({
+  title: 'Concord | Candidate Login'
+})
+
+
 definePageMeta({
     layout: 'authentication'
 })
@@ -19,6 +24,10 @@ definePageMeta({
             <div class="form-label-input">
                 <label for="password">Password</label>
                 <input type="password" name="password">
+            </div>
+            <div class="form-label-input">
+                <label for="referral-number">Referral number</label>
+                <input type="tel" name="referral-number">
             </div>
             <div class="form-label-input">
                 <label for="voting-code">Voting code</label>

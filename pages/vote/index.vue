@@ -1,4 +1,9 @@
 <script setup lang="ts">
+
+useSeoMeta({
+  title: 'Concord | Candidate Vote'
+})
+
 import { useRouter, useRoute } from 'vue-router'
 
 const router = useRouter()

@@ -1,12 +1,8 @@
 <script setup lang="ts">
-import { useSeoMeta } from '#app'
-
 const pageTitle = 'Concord | Homepage'
-
 useSeoMeta({
   title: pageTitle
 })
-
 </script>
 
 

@@ -1,28 +1,21 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 
 useSeoMeta({
-  title: 'Concord | Candidate Sign up'
+  title: 'Concord | Admin Login'
 })
 
+
 definePageMeta({
-    layout: 'authentication'
+    layout: 'adminauthentication'
 })
 </script>
 
 <template>
-    <div class="signuppage">
+    <div class="loginpage">
         <div class="page-title">
-            <span>Sign up to start voting</span>
+            <span>Log in to create a session</span>
         </div>
         <div class="form">
-            <div class="form-label-input">
-                <label for="name">Name</label>
-                <input type="text" name="name">
-            </div>
-            <div class="form-label-input">
-                <label for="email">Email</label>
-                <input type="email" name="email">
-            </div>
             <div class="form-label-input">
                 <label for="phone-number">Phone number</label>
                 <input type="tel" name="phone-number">
@@ -32,18 +25,17 @@ definePageMeta({
                 <input type="password" name="password">
             </div>
             <button>
-                <span>Sign up</span>
+                <span>Log in</span>
             </button>
         </div>
         <div class="question">
-            <span>Already have an account? <NuxtLink to="/login" class="action-link">Log in Here</NuxtLink></span>
+            <span>Don't have an account? <NuxtLink to="/admin/signup" class="action-link">Register Here</NuxtLink></span>
         </div>
     </div>
 </template>
 
-
 <style lang="scss" scoped>
-.signuppage {
+.loginpage {
     display: grid;
     row-gap: 30px;
     margin: 0 auto;

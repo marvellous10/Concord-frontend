@@ -1,5 +1,11 @@
 <script lang="ts" setup>
 
+useSeoMeta({
+  title: 'Concord | Closing Page'
+})
+
+
+
 </script>
 
 <template>
