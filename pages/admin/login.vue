@@ -1,4 +1,13 @@
 <script lang="ts" setup>
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { useAdminUserStore } from '../../stores/adminuser.store';
+import { useUserStore } from '../../stores/user.store';
+
+const userstore = useUserStore()
+const adminuserstore = useAdminUserStore()
+const router = useRouter()
+const config = useRuntimeConfig()
 
 useSeoMeta({
   title: 'Concord | Admin Login'
@@ -8,6 +17,39 @@ useSeoMeta({
 definePageMeta({
     layout: 'adminauthentication'
 })
+
+const phone_number = ref<String>('')
+const password = ref<String>('')
+var load_check = ref('false')
+const Login = async() => {
+    load_check.value = 'true'
+    const user_data = {
+        "phone_number": phone_number.value,
+        "password": password.value
+    }
+    try {
+        const response = await fetch(`${config.public.LOCAL_ADMIN_LOGIN}`, {
+            method: 'POST',
+            body: JSON.stringify(user_data),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        if (response.ok) {
+            const data = await response.json()
+            if (data.status === 'Passed') {
+                adminuserstore.setAdminUserSession(data.message, data.display_name)
+                load_check.value = 'false'
+                router.push('/admin/details')
+            }
+        }
+        load_check.value = 'false'
+    }
+    catch(error) {
+        console.log(error)
+        load_check.value = 'false'
+    }
+}
 </script>
 
 <template>
@@ -18,14 +60,15 @@ definePageMeta({
         <div class="form">
             <div class="form-label-input">
                 <label for="phone-number">Phone number</label>
-                <input type="tel" name="phone-number">
+                <input type="tel" name="phone-number" v-model="phone_number">
             </div>
             <div class="form-label-input">
                 <label for="password">Password</label>
-                <input type="password" name="password">
+                <input type="password" name="password" v-model="password">
             </div>
-            <button>
-                <span>Log in</span>
+            <button @click="Login">
+                <span v-if="load_check === 'false'">Log in</span>
+                <Load v-if="load_check === 'true'" />
             </button>
         </div>
         <div class="question">

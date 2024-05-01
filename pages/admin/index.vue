@@ -1,4 +1,17 @@
 <script setup lang="ts">
+import { ref } from 'vue'
+import { useUserStore } from '../../stores/user.store'
+import { useAdminUserStore } from '../../stores/adminuser.store'
+import { useRouter } from 'vue-router'
+
+const userstore = useUserStore()
+const adminuserstore = useAdminUserStore()
+const router = useRouter()
+
+if (userstore.access_token !== null) {
+    userstore.endUserSession()
+    router.push('/admin')
+}
 
 useSeoMeta({
   title: 'Concord | Admin'
@@ -8,7 +21,7 @@ definePageMeta({
     layout: 'adminnavigation'
 })
 
-
+const is_authenticated = computed(() => adminuserstore.access_token !== null)
 </script>
 
 <template>
@@ -26,9 +39,14 @@ definePageMeta({
                 </g>
             </svg>
         </div>
-        <NuxtLink to="/admin/login" class="login-container">
+        <NuxtLink to="/admin/login" class="login-container" v-if="is_authenticated == false">
             <div class="login">
                 <span>Log in</span>
+            </div>
+        </NuxtLink>
+        <NuxtLink to="/create/" class="login-container" v-if="is_authenticated == true">
+            <div class="login">
+                <span>Create admin session</span>
             </div>
         </NuxtLink>
     </div>
@@ -76,7 +94,7 @@ definePageMeta({
             span {
                 display: flex;
                 font-family: 'Orbit';
-                font-size: 24px;
+                font-size: 20px;
                 color: #FFFAFA;
                 margin-top: -5px;
             }

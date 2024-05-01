@@ -1,10 +1,54 @@
 <script lang="ts" setup>
+import { useSelected } from '../stores/selected.store'
+import { useRouter } from 'vue-router'
+import { useUserStore } from '../stores/user.store'
 
 useSeoMeta({
   title: 'Concord | Closing Page'
 })
 
+definePageMeta({
+    middleware: 'candidateauth'
+})
 
+const selected = useSelected()
+const router = useRouter()
+const userstore = useUserStore()
+const config = useRuntimeConfig()
+
+const logout = () => {
+    userstore.endUserSession()
+    router.push('/')
+}
+
+const sendVoteResult = async () => {
+    const selected_data = {
+        "selected_data": selected.selected,
+        "referral_phone_number": userstore.referral_number,
+        "access_token": userstore.access_token,
+        "voting_code": userstore.voting_details['code']
+    }
+    try {
+        const response = await fetch(`${config.public.LOCAL_CANDIDATE_VOTE}`, {
+            method: 'POST',
+            body: JSON.stringify(selected_data),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        if (response.ok) {
+            const data = await response.json()
+            if (data.status === 'Passed') {
+                logout()
+            }
+        }
+    }
+    catch(error) {
+        console.log(error)
+    }
+}
+
+sendVoteResult()
 
 </script>
 

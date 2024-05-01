@@ -1,15 +1,56 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
+import { useAdminUserStore } from '../../../stores/adminuser.store';
+import { useOverviewStore } from '../../../stores/overview.store'
+import { useRouter } from 'vue-router'
+
+const overviewstore = useOverviewStore()
+const adminuserstore = useAdminUserStore()
+const router = useRouter()
+const config = useRuntimeConfig()
+
 
 useSeoMeta({
   title: 'Concord | Admin Overview Code'
 })
 
 definePageMeta({
-    layout: 'adminnavigation'
+    layout: 'adminnavigation',
+    middleware: 'adminauth'
 })
 
 var voting_code = ref('')
+var load_check = ref('false')
+
+const getOverview = async () => {
+    load_check.value = 'true'
+    const user_data = {
+        "access_token": adminuserstore.access_token,
+        "voting_code": voting_code.value
+    }
+    try {
+        const response = await fetch(`${config.public.LOCAL_ADMIN_OVERVIEW}`, {
+            method: 'POST',
+            body: JSON.stringify(user_data),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        if (response.ok) {
+            const data = await response.json()
+            if(data.status === 'Passed') {
+                overviewstore.saveOverviewData(data.session_name, data.voting_code, data.position_count, data.votes_count, data.positions, data.position_winners)
+                load_check.value = 'false'
+                router.push('details/overview')
+            }
+        }
+        load_check.value = 'false'
+    }
+    catch(error) {
+        console.log(error)
+        load_check.value = 'false'
+    }
+}
 
 </script>
 
@@ -20,8 +61,9 @@ var voting_code = ref('')
         </div>
         <div class="form">
             <input v-model="voting_code" type="text" name="voting-code">
-            <button>
-                <span>Enter overview</span>
+            <button @click="getOverview">
+                <span v-if="load_check == 'false'">Enter overview</span>
+                <Load v-if="load_check == 'true'" />
             </button>
         </div>
         <NuxtLink class="c-voting-session" to="create/positions">
@@ -97,6 +139,7 @@ var voting_code = ref('')
         justify-content: center;
         background-color: #121212;
         border-radius: 50px;
+        text-decoration: none;
         span {
             display: flex;
             margin-top: -3px;

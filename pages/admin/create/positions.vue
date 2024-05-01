@@ -11,7 +11,8 @@ useSeoMeta({
 })
 
 definePageMeta({
-    layout: 'adminnavigation'
+    layout: 'adminnavigation',
+    middleware: 'adminauth'
 })
 
 var position_list = ref(['President'])

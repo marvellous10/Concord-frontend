@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 
 useSeoMeta({
   title: 'Concord | Candidate Sign up'
@@ -7,6 +9,47 @@ useSeoMeta({
 definePageMeta({
     layout: 'authentication'
 })
+const router = useRouter()
+const config = useRuntimeConfig()
+
+var name = ref<String>('')
+var email = ref<String>('')
+var password = ref<String>('')
+var phone_number = ref<String>('')
+var load_check = ref('false')
+
+const sendData = async() => {
+    load_check.value = 'true'
+    const user_data = {
+        "name": name.value,
+        "email": email.value,
+        "password": password.value,
+        "phone_number": phone_number.value
+    }
+    try{
+        const response = await fetch(`${config.public.LOCAL_CANDIDATE_SIGNUP}`, {
+            method: 'POST',
+            body: JSON.stringify(user_data),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        if (response.ok) {
+            const data = await response.json()
+            if (data.status === 'Passed') {
+                console.log('Registered Successfully')
+            } else{
+                console.log(data.message)
+            }
+            load_check.value = 'false'
+        }
+        load_check.value = 'false'
+    }
+    catch(error:any) {
+        console.log(error)
+        load_check.value = 'false'
+    }
+}
 </script>
 
 <template>
@@ -17,22 +60,23 @@ definePageMeta({
         <div class="form">
             <div class="form-label-input">
                 <label for="name">Name</label>
-                <input type="text" name="name">
+                <input type="text" name="name" v-model="name">
             </div>
             <div class="form-label-input">
                 <label for="email">Email</label>
-                <input type="email" name="email">
+                <input type="email" name="email" v-model="email">
             </div>
             <div class="form-label-input">
                 <label for="phone-number">Phone number</label>
-                <input type="tel" name="phone-number">
+                <input type="tel" name="phone-number" v-model="phone_number">
             </div>
             <div class="form-label-input">
                 <label for="password">Password</label>
-                <input type="password" name="password">
+                <input type="password" name="password" v-model="password">
             </div>
-            <button>
-                <span>Sign up</span>
+            <button @click="sendData" :disabled="load_check === 'true'">
+                <span v-if="load_check === 'false'">Sign up</span>
+                <Load v-if="load_check === 'true'" />
             </button>
         </div>
         <div class="question">

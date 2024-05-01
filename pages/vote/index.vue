@@ -1,16 +1,32 @@
 <script setup lang="ts">
+import { useUserStore } from '../../stores/user.store'
+import { useSelected } from '../../stores/selected.store';
+
+const selected = useSelected()
+const userstore = useUserStore()
 
 useSeoMeta({
   title: 'Concord | Candidate Vote'
 })
+
+definePageMeta({
+    middleware: 'candidateauth'
+})
+
 
 import { useRouter, useRoute } from 'vue-router'
 
 const router = useRouter()
 const route = useRoute()
 
+const voting_details = userstore.voting_details
+
+const session_name = voting_details.session_name
+
 const pageContinue = async () => {
-    router.push('/vote/123')
+    const vote_id = voting_details.positions[0].id
+    selected.returnToZero()
+    router.push(`/vote/${vote_id}`)
 }
 
 </script>
@@ -21,7 +37,7 @@ const pageContinue = async () => {
             <span>Click continue to start voting</span>
         </div>
         <div class="voting-info">
-            <span>Voting session name for 2024</span>
+            <span>{{ session_name }}</span>
         </div>
         <div class="vote-continue-button">
             <button @click="pageContinue">

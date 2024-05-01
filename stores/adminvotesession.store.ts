@@ -2,7 +2,7 @@ import { defineStore } from "pinia";
 
 export const useAdminVoteSession = defineStore('adminVoteSession', {
     state: () => ({
-        session_name: '' as String,
+        session_name: null as String|null,
         vote_session: {},
         vote_positions: [{}]
     }),
@@ -17,6 +17,8 @@ export const useAdminVoteSession = defineStore('adminVoteSession', {
         },
         removeVoteSession() {
             this.vote_session = {}
+            this.session_name = null
+            this.vote_positions = [{}]
         }
     }
 })

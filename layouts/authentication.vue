@@ -1,4 +1,16 @@
 <script setup lang="ts">
+import { useRouter } from 'vue-router'
+import { useAdminUserStore } from '../stores/adminuser.store';
+import { useUserStore } from '../stores/user.store';
+
+const userstore = useUserStore()
+const adminuserstore = useAdminUserStore()
+const router = useRouter()
+
+if (adminuserstore.access_token !== null) {
+    adminuserstore.removeAdminUserSession()
+    router.push('/admin')
+}
 </script>
 
 <template>

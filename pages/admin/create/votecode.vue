@@ -4,16 +4,20 @@ useSeoMeta({
 })
 
 definePageMeta({
-    layout: 'adminnavigation'
+  layout: 'adminnavigation',
+  middleware: 'adminauth'
 })
 
 
 import { ref } from 'vue'
 import { useAdminVoteSession } from '../../../stores/adminvotesession.store'
+import { useAdminUserStore } from '../../../stores/adminuser.store';
 import { useRouter, useRoute } from 'vue-router'
 
 const router = useRouter()
 const adminvotesession = useAdminVoteSession()
+const adminuserstore = useAdminUserStore()
+const config = useRuntimeConfig()
 
 const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
 
@@ -33,19 +37,47 @@ const generateCode = () => {
 }
 
 var allowed_numbers_list = ref('')
+var load_check = ref('false')
 //const new_list: String[] = allowed_numbers_list.value.split(/, /).map((item: string) => item.trim())
 //08051390091, 09049195356
 
 const checkNumbers = async() => {
+  load_check.value = 'true'
   const new_list: String[] = allowed_numbers_list.value.split(/, /).map((item: string) => item.trim())
   const voting_session_dict = {
     "session_name": adminvotesession.session_name,
     "code": votecode.value,
     "allowed_phone_numbers": new_list,
+    "candidates_voted": [],
     "positions": adminvotesession.vote_positions
   }
-  await adminvotesession.setVoteSession(voting_session_dict)
-  router.push('../code')
+  adminvotesession.setVoteSession(voting_session_dict)
+
+  const vote_data = {
+    "access_token": adminuserstore.access_token,
+    "voting_data": voting_session_dict
+  }
+  try {
+    const response = await fetch(`${config.public.LOCAL_ADMIN_VOTE}`, {
+      method: 'POST',
+      body: JSON.stringify(vote_data),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+    if (response.ok) {
+      const data = await response.json()
+      if (data.status === 'Passed') {
+        router.push('../../code')
+        load_check.value = 'false'
+      }
+    }
+    load_check.value = 'false'
+  }
+  catch(error) {
+    console.log(error)
+  }
+  load_check.value = 'false'
 }
 
 </script>
@@ -72,7 +104,8 @@ const checkNumbers = async() => {
       </button>
     </div>
     <button class="continue-btn" @click="checkNumbers">
-      <span>Continue</span>
+      <span v-if="load_check === 'false'">Continue</span>
+      <Load v-if="load_check === 'true'" />
     </button>
   </div>
 </template>

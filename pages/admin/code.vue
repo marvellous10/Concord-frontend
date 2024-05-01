@@ -11,7 +11,8 @@ useSeoMeta({
 })
 
 definePageMeta({
-    layout: 'adminnavigation'
+    layout: 'adminnavigation',
+    middleware: 'adminauth'
 })
 
 const session_code = adminvotesession.vote_session
@@ -19,7 +20,7 @@ const votecode = session_code["code"]
 
 
 const copyText = () => {
-    navigator.clipboard.writeText(votecode.value)
+    navigator.clipboard.writeText(votecode)
         .then(
             () => console.log('Copied'),
             err => console.error('Cannot copy:', err)

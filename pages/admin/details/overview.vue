@@ -1,23 +1,35 @@
 <script lang="ts" setup>
 import { ref } from "vue"
+import { useOverviewStore } from "../../../stores/overview.store";
+
+const overviewstore = useOverviewStore()
+
 
 useSeoMeta({
   title: 'Concord | Admin Overview'
 })
 
 definePageMeta({
-    layout: 'adminnavigation'
+    layout: 'adminnavigation',
+    middleware: 'adminauth'
 })
 
-const votecode = ref<string>('Hello')
+const votecode = overviewstore.voting_code
+
+console.log(overviewstore.voting_code)
 
 const copyText = () => {
-    navigator.clipboard.writeText(votecode.value)
+    navigator.clipboard.writeText(votecode)
         .then(
             () => console.log('Copied'),
             err => console.error('Cannot copy:', err)
         )
 }
+
+var positions = overviewstore.positions
+var position_winners = overviewstore.position_winners
+const position_count = overviewstore.position_count
+const voters_count = overviewstore.voters_count
 
 </script>
 
@@ -25,14 +37,14 @@ const copyText = () => {
     <div class="overview-page">
         <div class="detail-container-wrapper">
             <div class="container">
-                <span>8 Positions</span>
+                <span>{{ position_count }} Positions</span>
             </div>
             <div class="container">
-                <span>48 Voters</span>
+                <span>{{ voters_count }} Voters</span>
             </div>
         </div>
         <div class="code-container">
-            <span>VOTECODE123</span>
+            <span>{{ votecode }}</span>
             <button class="copy" @click="copyText">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                     <g>
@@ -44,10 +56,10 @@ const copyText = () => {
         <div class="winners">
             <span>Winners</span>
         </div>
-        <div class="candidate-wrappers">
-            <label for="candidate">President</label>
+        <div class="candidate-wrappers" v-for="(position, index) in positions" :key="position.id">
+            <label for="candidate">{{ position.name }}</label>
             <div class="candidate" name="candidate">
-                <span>Candidate One</span>
+                <span>{{ position_winners[index].name }}</span>
             </div>
         </div>
         <button class="cp-btn">

@@ -1,7 +1,21 @@
 <script setup lang="ts">
-const pageTitle = 'Concord | Homepage'
+import { useUserStore } from '../stores/user.store'
+import { useRouter } from 'vue-router'
+import { useAdminUserStore } from '../stores/adminuser.store'
+
+const userstore = useUserStore()
+const adminuserstore = useAdminUserStore()
+const router = useRouter()
+
+if (adminuserstore.access_token !== null) {
+    adminuserstore.removeAdminUserSession()
+    router.push('/')
+}
+
+const is_authenticated = computed(()=> userstore.access_token !== null)
+
 useSeoMeta({
-  title: pageTitle
+  title: 'Concord | Homepage'
 })
 </script>
 
@@ -82,9 +96,14 @@ useSeoMeta({
                 </g>
             </svg>
         </div>
-        <NuxtLink to="/login" class="login-container">
+        <NuxtLink to="/login" class="login-container" v-if="is_authenticated == false">
             <div class="login">
                 <span>Log in</span>
+            </div>
+        </NuxtLink>
+        <NuxtLink to="/vote" class="login-container" v-else>
+            <div class="login">
+                <span>Go to vote Session</span>
             </div>
         </NuxtLink>
     </div>
@@ -133,7 +152,7 @@ useSeoMeta({
             span {
                 display: flex;
                 font-family: 'Orbit';
-                font-size: 24px;
+                font-size: 20px;
                 color: #FFFAFA;
                 margin-top: -5px;
             }
