@@ -20,6 +20,7 @@ const display_name = adminuserstore.display_name
 
 const logOut = () => {
     adminuserstore.removeAdminUserSession()
+    is_authenticated = false
     router.push('/admin')
 }
 </script>

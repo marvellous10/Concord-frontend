@@ -38,6 +38,7 @@ const sendData = async() => {
             const data = await response.json()
             if (data.status === 'Passed') {
                 console.log('Registered Successfully')
+                router.push('login')
             } else{
                 console.log(data.message)
             }

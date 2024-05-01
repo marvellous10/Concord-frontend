@@ -39,7 +39,7 @@ const getOverview = async () => {
         if (response.ok) {
             const data = await response.json()
             if(data.status === 'Passed') {
-                overviewstore.saveOverviewData(data.session_name, data.voting_code, data.position_count, data.votes_count, data.positions, data.position_winners)
+                overviewstore.saveOverviewData(data.session_name, data.voting_code, data.position_count, data.voters_count, data.positions, data.position_winners)
                 load_check.value = 'false'
                 router.push('details/overview')
             }

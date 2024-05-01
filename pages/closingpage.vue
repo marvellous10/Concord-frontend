@@ -18,6 +18,7 @@ const config = useRuntimeConfig()
 
 const logout = () => {
     userstore.endUserSession()
+    selected.removeSelections()
     router.push('/')
 }
 

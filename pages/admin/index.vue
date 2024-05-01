@@ -44,7 +44,7 @@ const is_authenticated = computed(() => adminuserstore.access_token !== null)
                 <span>Log in</span>
             </div>
         </NuxtLink>
-        <NuxtLink to="/create/" class="login-container" v-if="is_authenticated == true">
+        <NuxtLink to="admin/details" class="login-container" v-if="is_authenticated == true">
             <div class="login">
                 <span>Create admin session</span>
             </div>
