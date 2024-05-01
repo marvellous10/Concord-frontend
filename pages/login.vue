@@ -31,6 +31,8 @@ const logIn = async () => {
         "voting_code": voting_code.value
     }
     try {
+        //Testing fix
+        console.log(user_data)
         const response = await fetch(`${config.public.LOCAL_CANDIDATE_LOGIN}`, {
             method: 'POST',
             body: JSON.stringify(user_data),
