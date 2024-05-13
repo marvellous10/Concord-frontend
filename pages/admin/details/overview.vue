@@ -31,7 +31,6 @@ var position_winners = overviewstore.position_winners
 const position_count = overviewstore.position_count
 const voters_count = overviewstore.voters_count
 
-console.log(position_winners)
 
 </script>
 
