@@ -19,9 +19,17 @@ const email = ref<String>('')
 const phone_number = ref<String>('')
 const password = ref<String>('')
 var load_check = ref('false')
+const error = ref(false)
+const message = ref('')
 
 const signUp = async() => {
     load_check.value = 'true'
+    if (name.value.length == 0 || email.value.length == 0 || phone_number.value.length == 0 || password.value.length == 0) {
+        error.value = true
+        message.value = 'Please fill in all fields'
+        load_check.value = 'false'
+        return
+    }
     const user_data = {
         "name": name.value,
         "email": email.value,
@@ -39,18 +47,22 @@ const signUp = async() => {
         if (response.ok) {
             const data = await response.json()
             if (data.status === 'Passed') {
-                console.log(data.message)
-                load_check.value = 'false'
                 router.push('login')
-            } else {
                 load_check.value = 'false'
-                console.log(data.message)
+            }
+        }else {
+            const data = await response.json()
+            if (data.status === 'Failed') {
+                error.value = true
+                message.value = data.message
+                load_check.value = 'false'
             }
         }
-        load_check.value = 'false'
     }
-    catch(error) {
-        console.log(error)
+    catch(err) {
+        console.log(err)
+        error.value = true
+        message.value = 'An error occurred, please try again'
         load_check.value = 'false'
     }
 }

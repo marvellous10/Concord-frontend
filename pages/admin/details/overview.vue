@@ -31,6 +31,7 @@ var position_winners = overviewstore.position_winners
 const position_count = overviewstore.position_count
 const voters_count = overviewstore.voters_count
 
+
 </script>
 
 <template>
@@ -58,8 +59,11 @@ const voters_count = overviewstore.voters_count
         </div>
         <div class="candidate-wrappers" v-for="(position, index) in positions" :key="position.id">
             <label for="candidate">{{ position.name }}</label>
-            <div class="candidate" name="candidate">
-                <span>{{ position_winners[index].name }}</span>
+            <div class="candidates-container">
+                <div class="candidate" name="candidate" v-for="winner in position_winners[index]" :key="winner.id">
+                    <span>{{ winner.name }}</span>
+                    <span>{{ winner.voters_number }}</span>
+                </div>
             </div>
         </div>
         <button class="cp-btn">
@@ -146,13 +150,17 @@ const voters_count = overviewstore.voters_count
             font-size: 16px;
             color: #121212;
         }
+        .candidates-container {
+            display: grid;
+            row-gap: 10px;
+        }
         .candidate {
             display: flex;
             padding-right: 10px;
             padding-left: 10px;
             width: 340px;
             height: 32px;
-            justify-content: left;
+            justify-content: space-between;
             align-items: center;
             border: 1.5px solid #121212;
             border-radius: 50px;

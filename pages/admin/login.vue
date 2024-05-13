@@ -21,8 +21,17 @@ definePageMeta({
 const phone_number = ref<String>('')
 const password = ref<String>('')
 var load_check = ref('false')
+const error = ref(false)
+const message = ref('')
+
 const Login = async() => {
     load_check.value = 'true'
+    if (phone_number.value.length == 0 || password.value.length == 0) {
+        error.value = true
+        message.value = 'Please fill in all fields'
+        load_check.value = 'true'
+        return
+    }
     const user_data = {
         "phone_number": phone_number.value,
         "password": password.value
@@ -39,14 +48,22 @@ const Login = async() => {
             const data = await response.json()
             if (data.status === 'Passed') {
                 adminuserstore.setAdminUserSession(data.message, data.display_name)
-                load_check.value = 'false'
                 router.push('/admin/details')
+                load_check.value = 'false'
+            }
+        } else {
+            const data = await response.json()
+            if (data.status === 'Failed') {
+                error.value = true
+                message.value = data.message
+                load_check.value = 'false'
             }
         }
-        load_check.value = 'false'
     }
-    catch(error) {
-        console.log(error)
+    catch(err) {
+        console.log(err)
+        error.value = true
+        message.value = 'An error occured, please try again'
         load_check.value = 'false'
     }
 }
@@ -65,6 +82,9 @@ const Login = async() => {
             <div class="form-label-input">
                 <label for="password">Password</label>
                 <input type="password" name="password" v-model="password">
+            </div>
+            <div class="error-message" v-if="error == true">
+                <span>{{ message }}</span>
             </div>
             <button @click="Login">
                 <span v-if="load_check === 'false'">Log in</span>
@@ -115,6 +135,20 @@ const Login = async() => {
                 width: 305px;
                 outline: 0;
                 border-radius: 50px;
+                font-family: 'Orbit';
+                font-size: 16px;
+            }
+        }
+        .error-message {
+            background-color: rgb(255,0,56, 0.1);
+            margin-top: 10px;
+            border: 1.5px solid #fe2712;
+            border-radius: 50px;
+            height: 32px;
+            justify-items: center;
+            align-content: center;
+            span {
+                margin-top: -3px;
                 font-family: 'Orbit';
                 font-size: 16px;
             }
