@@ -21,9 +21,19 @@ const password = ref<String>('')
 const referral_number = ref<String>('')
 const voting_code = ref<String>('')
 var load_check = ref('false')
+const error = ref(false)
+const message = ref('')
 
 const logIn = async () => {
     load_check.value = 'true'
+
+    if (phone_number.value.length == 0 || password.value.length == 0 || referral_number.value.length == 0 || voting_code.value.length == 0) {
+        error.value = true
+        message.value = 'Please fill all fields'
+        load_check.value = 'false'
+        return
+    }
+
     const user_data = {
         "phone_number": phone_number.value,
         "password": password.value,
@@ -31,8 +41,6 @@ const logIn = async () => {
         "voting_code": voting_code.value
     }
     try {
-        //Testing fix
-        console.log(user_data)
         const response = await fetch(`${config.public.LOCAL_CANDIDATE_LOGIN}`, {
             method: 'POST',
             body: JSON.stringify(user_data),
@@ -47,11 +55,19 @@ const logIn = async () => {
                 router.push('vote')
             }
             load_check.value = 'false'
+        }else {
+            const data = await response.json()
+            if (data.status === 'Failed') {
+                error.value = true
+                message.value = data.message
+                load_check.value = 'false'
+            }
         }
-        load_check.value = 'false'
     }
-    catch (error:any) {
-        console.log(error)
+    catch (err:any) {
+        console.log(err)
+        error.value = true
+        message.value = 'An error occured, please try again'
         load_check.value = 'false'
     }
 }
@@ -79,6 +95,9 @@ const logIn = async () => {
             <div class="form-label-input">
                 <label for="voting-code">Voting code</label>
                 <input type="text" name="voting-code" v-model="voting_code">
+            </div>
+            <div class="error-message" v-if="error == true">
+                <span>{{ message }}</span>
             </div>
             <button @click="logIn">
                 <span v-if="load_check === 'false'">Log in</span>
@@ -130,6 +149,20 @@ const logIn = async () => {
                 width: 305px;
                 outline: 0;
                 border-radius: 50px;
+                font-family: 'Orbit';
+                font-size: 16px;
+            }
+        }
+        .error-message {
+            background-color: rgb(255,0,56, 0.1);
+            margin-top: 10px;
+            border: 1.5px solid #fe2712;
+            border-radius: 50px;
+            height: 32px;
+            justify-items: center;
+            align-content: center;
+            span {
+                margin-top: -3px;
                 font-family: 'Orbit';
                 font-size: 16px;
             }

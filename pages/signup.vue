@@ -18,8 +18,19 @@ var password = ref<String>('')
 var phone_number = ref<String>('')
 var load_check = ref('false')
 
+const error = ref(false)
+const message = ref('')
+
 const sendData = async() => {
     load_check.value = 'true'
+
+    if (name.value.length == 0 || email.value.length == 0 || password.value.length == 0 || phone_number.value.length == 0) {
+        error.value = true
+        message.value = `Fill in all fields`
+        load_check.value = 'false'
+        return
+    }
+
     const user_data = {
         "name": name.value,
         "email": email.value,
@@ -39,15 +50,22 @@ const sendData = async() => {
             if (data.status === 'Passed') {
                 console.log('Registered Successfully')
                 router.push('login')
-            } else{
-                console.log(data.message)
             }
             load_check.value = 'false'
         }
+        else {
+            const data = await response.json()
+            if (data.status === 'Failed') {
+                error.value = true
+                message.value = data.message
+            }
+        }
         load_check.value = 'false'
     }
-    catch(error:any) {
-        console.log(error)
+    catch(err:any) {
+        console.log(err)
+        error.value = true
+        message.value = 'An error occurred, please try again'
         load_check.value = 'false'
     }
 }
@@ -74,6 +92,9 @@ const sendData = async() => {
             <div class="form-label-input">
                 <label for="password">Password</label>
                 <input type="password" name="password" v-model="password">
+            </div>
+            <div class="error-message" v-if="error == true">
+                <span>{{ message }}</span>
             </div>
             <button @click="sendData" :disabled="load_check === 'true'">
                 <span v-if="load_check === 'false'">Sign up</span>
@@ -125,6 +146,20 @@ const sendData = async() => {
                 width: 305px;
                 outline: 0;
                 border-radius: 50px;
+                font-family: 'Orbit';
+                font-size: 16px;
+            }
+        }
+        .error-message {
+            background-color: rgb(255,0,56, 0.1);
+            margin-top: 10px;
+            border: 1.5px solid #fe2712;
+            border-radius: 50px;
+            height: 32px;
+            justify-items: center;
+            align-content: center;
+            span {
+                margin-top: -3px;
                 font-family: 'Orbit';
                 font-size: 16px;
             }
