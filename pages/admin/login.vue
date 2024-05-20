@@ -29,7 +29,7 @@ const Login = async() => {
     if (phone_number.value.length == 0 || password.value.length == 0) {
         error.value = true
         message.value = 'Please fill in all fields'
-        load_check.value = 'true'
+        load_check.value = 'false'
         return
     }
     const user_data = {
@@ -86,7 +86,7 @@ const Login = async() => {
             <div class="error-message" v-if="error == true">
                 <span>{{ message }}</span>
             </div>
-            <button @click="Login">
+            <button @click="Login" :disabled="load_check == 'true'">
                 <span v-if="load_check === 'false'">Log in</span>
                 <Load v-if="load_check === 'true'" />
             </button>
