@@ -99,7 +99,7 @@ const logIn = async () => {
             <div class="error-message" v-if="error == true">
                 <span>{{ message }}</span>
             </div>
-            <button @click="logIn">
+            <button @click="logIn" :disabled="load_check === 'true'">
                 <span v-if="load_check === 'false'">Log in</span>
                 <Load v-if="load_check === 'true'" />
             </button>
