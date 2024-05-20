@@ -90,6 +90,9 @@ const signUp = async() => {
                 <label for="password">Password</label>
                 <input type="password" name="password" v-model="password">
             </div>
+            <div class="error-message" v-if="error == true">
+                <span>{{ message }}</span>
+            </div>
             <button :disabled="load_check === 'true'" @click="signUp">
                 <span v-if="load_check === 'false'">Sign up</span>
                 <Load v-if="load_check === 'true'" />
@@ -140,6 +143,20 @@ const signUp = async() => {
                 width: 305px;
                 outline: 0;
                 border-radius: 50px;
+                font-family: 'Orbit';
+                font-size: 16px;
+            }
+        }
+        .error-message {
+            background-color: rgb(255,0,56, 0.1);
+            margin-top: 10px;
+            border: 1.5px solid #fe2712;
+            border-radius: 50px;
+            height: 32px;
+            justify-items: center;
+            align-content: center;
+            span {
+                margin-top: -3px;
                 font-family: 'Orbit';
                 font-size: 16px;
             }
