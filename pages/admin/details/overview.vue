@@ -16,6 +16,9 @@ definePageMeta({
     //middleware: 'adminauth'
 })
 
+var opensession = ref(overviewstore.open_session)
+var isActive = ref(false)
+
 const votecode = overviewstore.voting_code
 
 const getOverviewDetails = async () => {
@@ -43,6 +46,10 @@ const getOverviewDetails = async () => {
 }
 
 getOverviewDetails()
+
+const togglesession = () => {
+    isActive.value = true
+}
 
 const copyText = () => {
     navigator.clipboard.writeText(votecode)
@@ -82,7 +89,9 @@ const voters_count = overviewstore.voters_count
         </div>
         <div class="toggle-session">
             <span>Turn the session on or off.</span>
-            <i class="fab fa-toggle-on"></i>
+            <button @click="togglesession" :class="{'active': isActive}" class="toggle-button">
+                <span class="toggle-switch"></span>
+            </button>
         </div>
         <div class="winners">
             <span>Winners</span>
@@ -158,6 +167,51 @@ const voters_count = overviewstore.voters_count
             svg {
                 width: 24px;
                 height: 24px;
+            }
+        }
+    }
+    .toggle-session {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        span {
+            font-family: 'Orbit';
+            font-size: 16px;
+            color: #121212;
+            margin-top: -3px;
+        }
+
+        .toggle-button {
+            position: relative;
+            padding: 2px;
+            width: 60px;
+            height: 28px;
+            border: 1.5px solid #121212;
+            background-color: transparent;
+            border-radius: 50px;
+            cursor: pointer;
+            outline: none;
+            transition: 1s ease-out;
+            span {
+                position: absolute;
+                top: 4px;
+                left: 2px;
+                background-color: #121212;
+                width: 24px;
+                height: 24px;
+                border-radius: 52px;
+            }
+        }
+        .active {
+            border: 0;
+            outline: 0;
+            background-color: #121212;
+            transition: 1s ease-in;
+            span {
+                background-color: #FFFAFA;
+                right: 3px;
+                top: 5px;
+                left: 34px;
             }
         }
     }

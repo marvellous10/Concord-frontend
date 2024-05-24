@@ -3,7 +3,7 @@ import { defineStore } from 'pinia'
 export const useOverviewStore = defineStore('overviewStore', {
     state: () => ({
         session_name: null as String|null,
-        open_session: null as Boolean|null,
+        open_session: false as Boolean,
         voting_code: null as String|null,
         position_count: null as String|null,
         voters_count: null as String|null,
@@ -22,7 +22,7 @@ export const useOverviewStore = defineStore('overviewStore', {
             this.position_winners = position_winners
         },
         removeOverviewData() {
-            this.open_session = null
+            this.open_session = false
             this.session_name = null
             this.voting_code = null
             this.position_count=null
