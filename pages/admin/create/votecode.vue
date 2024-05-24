@@ -5,7 +5,7 @@ useSeoMeta({
 
 definePageMeta({
   layout: 'adminnavigation',
-  //middleware: 'adminauth'
+  middleware: 'adminauth'
 })
 
 
@@ -57,6 +57,7 @@ const checkNumbers = async() => {
   const voting_session_dict = {
     "session_name": adminvotesession.session_name,
     "code": votecode.value,
+    "open_session": false,
     "allowed_phone_numbers": new_list,
     "candidates_voted": [],
     "positions": adminvotesession.vote_positions

@@ -13,11 +13,17 @@ useSeoMeta({
 
 definePageMeta({
     layout: 'adminnavigation',
-    //middleware: 'adminauth'
+    middleware: 'adminauth'
 })
 
 var opensession = ref(overviewstore.open_session)
-var isActive = ref(false)
+var isActive = ref<Boolean>()
+
+if (opensession.value === true) {
+    isActive.value = true
+}else if(opensession.value === false) {
+    isActive.value = false
+}
 
 const votecode = overviewstore.voting_code
 
@@ -47,8 +53,70 @@ const getOverviewDetails = async () => {
 
 getOverviewDetails()
 
-const togglesession = () => {
-    isActive.value = true
+var message = ref<String|null>()
+
+const togglesession = async () => {
+    if (isActive.value === true) {
+        const admin_user_data = {
+            "access_token": adminuserstore.access_token,
+            "status": !isActive.value,
+            "voting_code": overviewstore.voting_code
+        }
+        try {
+            const response = await fetch(`${config.public.LOCAL_ADMIN_CHANGESTATUS}`, {
+                method: 'POST',
+                body: JSON.stringify(admin_user_data),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            if (response.ok) {
+                const data = await response.json()
+                if(data.status === 'Passed') {
+                    message.value = 'Session is now closed'
+                    isActive.value = false
+                    getOverviewDetails()
+                }else {
+                    const data = await response.json()
+                    if (data.status === 'Failed') {
+                        return
+                    }
+                }
+            }
+        }catch(errors) {
+            console.log(errors)
+        }
+    }else if (isActive.value === false) {
+        const admin_user_data = {
+            "access_token": adminuserstore.access_token,
+            "status": !isActive.value,
+            "voting_code": overviewstore.voting_code
+        }
+        try {
+            const response = await fetch(`${config.public.LOCAL_ADMIN_CHANGESTATUS}`, {
+                method: 'POST',
+                body: JSON.stringify(admin_user_data),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            if (response.ok) {
+                const data = await response.json()
+                if(data.status === 'Passed') {
+                    message.value = 'Session is now open'
+                    isActive.value = true
+                    getOverviewDetails()
+                }
+            }else {
+                const data = await response.json()
+                if (data.status === 'Failed') {
+                    return
+                }
+            }
+        }catch(errors) {
+            console.log(errors)
+        }
+    }
 }
 
 const copyText = () => {
@@ -176,7 +244,7 @@ const voters_count = overviewstore.voters_count
         justify-content: space-between;
         span {
             font-family: 'Orbit';
-            font-size: 16px;
+            font-size: 18px;
             color: #121212;
             margin-top: -3px;
         }
@@ -191,7 +259,7 @@ const voters_count = overviewstore.voters_count
             border-radius: 50px;
             cursor: pointer;
             outline: none;
-            transition: 1s ease-out;
+            transition: background-color 0.3s ease-in-out; 
             span {
                 position: absolute;
                 top: 4px;
@@ -200,18 +268,19 @@ const voters_count = overviewstore.voters_count
                 width: 24px;
                 height: 24px;
                 border-radius: 52px;
+                transition: left 0.3s ease-in-out;
             }
         }
         .active {
             border: 0;
             outline: 0;
             background-color: #121212;
-            transition: 1s ease-in;
+            transition: background-color 0.3s ease-in-out;
             span {
                 background-color: #FFFAFA;
                 right: 3px;
                 top: 5px;
-                left: 34px;
+                left: calc(100% - 26px);
             }
         }
     }

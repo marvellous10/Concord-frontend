@@ -31,14 +31,27 @@ const sendData = async() => {
         return
     }
 
+    if (password.value.length <=7 ) {
+        error.value = true
+        message.value = 'Password should be at least 8 characters'
+        load_check.value = 'false'
+        return
+    }
+
     const symbols = ['!', '@', '(', ')', '%', '&'];
     var symbol_check = null as Boolean | null;
     for (let i=0; i<symbols.length; i++) {
-        if (symbols[i] in password.value) {
-            symbol_check = true
+        for (let j=0; j<password.value.length; j++) {
+            if (symbols[i] == password.value[j]) {
+                symbol_check = true
+                break
+            }
+            else {
+                symbol_check = false
+            }
         }
-        else {
-            symbol_check = false
+        if (symbol_check === true) {
+            break
         }
     }
     if (symbol_check != true) {
