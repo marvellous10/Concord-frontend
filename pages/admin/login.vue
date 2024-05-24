@@ -32,6 +32,12 @@ const Login = async() => {
         load_check.value = 'false'
         return
     }
+    if (password.value.length <=7 ) {
+        error.value = true
+        message.value = 'Password should be at least 8 characters'
+        load_check.value = 'false'
+        return
+    }
     const user_data = {
         "phone_number": phone_number.value,
         "password": password.value

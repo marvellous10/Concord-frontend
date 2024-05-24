@@ -25,6 +25,7 @@ export default defineNuxtConfig({
 
       LOCAL_ADMIN_VOTE: process.env.LOCAL_ADMIN_VOTE,
       LOCAL_ADMIN_OVERVIEW: process.env.LOCAL_ADMIN_OVERVIEW,
+      LOCAL_ADMIN_CHANGESTATUS: process.env.LOCAL_ADMIN_CHANGESTATUS,
       LOCAL_CANDIDATE_VOTE: process.env.LOCAL_CANDIDATE_VOTE,
     }
   },

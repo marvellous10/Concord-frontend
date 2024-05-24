@@ -19,7 +19,7 @@ var position_list = ref(['President'])
 var session_name = ref<String>('')
 var list_counter = ref(1)
 var candidates = ref<String>('')
-var candidates_list = ref<Array<[]>>([['Candidate One', 'Candidate Two']])
+var candidates_list = ref<Array<[]>>([])
 
 
 const addPosition = () => {
@@ -55,9 +55,17 @@ const generateId = () => {
 
 
 var positions: { name: string; id: string; candidates: any[]; }[] = []
+var error = ref(false)
+var message = ref('')
 
+const checkCandidates = () => {
 
-const checkCandidates = async () => {
+    if (session_name.value.length <= 1) {
+        error.value = true
+        message.value = 'Please fill in all fields'
+        return
+    }
+
     const key = 'positions'
     for(let i=0; i<position_list.value.length;i++) {
         var position_dict = {
@@ -66,8 +74,14 @@ const checkCandidates = async () => {
             "candidates": []
         }
         position_dict['name'] = position_list.value[i]
+        if (position_dict['name'].length <= 1) {
+            error.value = true
+            message.value = 'Fill in all fields'
+            return
+        }
         position_dict['id'] = generateId()
         const new_list: String[] = candidates_list.value[i].split(/, /).map((item: string) => item.trim())
+        console.log(new_list)
         var id_list: String[] = []
         for (let j=0; j<new_list.length; j++) {
             var candidates_dict = {
@@ -83,12 +97,20 @@ const checkCandidates = async () => {
             }
             candidates_dict['name'] = new_list[j]
 
-            position_dict['candidates'].push(candidates_dict)
+            if (candidates_dict['name'].length <= 1) {
+                error.value = true
+                message.value = 'Fill in all fields'
+                return
+            }else {
+                position_dict['candidates'].push(candidates_dict)
+            }
         }
         positions.push(position_dict)
     }
-    await adminvotesession.setPartialVoteSession(session_name.value, positions)
-    router.push('votecode/')
+    if (error.value !== true) {
+        adminvotesession.setPartialVoteSession(session_name.value, positions)
+        router.push('votecode/')
+    }
 }
 
 </script>
@@ -120,6 +142,9 @@ const checkCandidates = async () => {
             <button class="add-position-btn" @click="addPosition">
                 <span>Add position</span>
             </button>
+        </div>
+        <div class="error-message" v-if="error == true">
+            <span>{{ message }}</span>
         </div>
         <button class="continue-btn" @click="checkCandidates">
             <span>Continue</span>
@@ -210,6 +235,21 @@ const checkCandidates = async () => {
                 font-size: 16px;
                 color: #FFFAFA;
             }
+        }
+    }
+    .error-message {
+        display: grid;
+        background-color: rgb(255,0,56, 0.1);
+        margin-top: 10px;
+        border: 1.5px solid #fe2712;
+        border-radius: 50px;
+        height: 32px;
+        justify-items: center;
+        align-content: center;
+        span {
+            margin-top: -3px;
+            font-family: 'Orbit';
+            font-size: 16px;
         }
     }
     .continue-btn {
