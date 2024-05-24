@@ -30,6 +30,36 @@ const signUp = async() => {
         load_check.value = 'false'
         return
     }
+
+    if (password.value.length <=7 ) {
+        error.value = true
+        message.value = 'Password should be at least 8 characters'
+        load_check.value = 'false'
+        return
+    }
+
+    const symbols = ['!', '@', '(', ')', '%', '&'];
+    var symbol_check = null as Boolean | null;
+    for (let i=0; i<symbols.length; i++) {
+        for (let j=0; j<password.value.length; j++) {
+            if (symbols[i] == password.value[j]) {
+                symbol_check = true
+                break
+            }
+            else {
+                symbol_check = false
+            }
+        }
+        if (symbol_check === true) {
+            break
+        }
+    }
+    if (symbol_check != true) {
+        error.value = true
+        message.value = 'Include a symbol: !, @, (, ), %, & in password'
+        load_check.value = 'false'
+        return
+    }
     const user_data = {
         "name": name.value,
         "email": email.value,

@@ -40,13 +40,24 @@ var allowed_numbers_list = ref('')
 var load_check = ref('false')
 //const new_list: String[] = allowed_numbers_list.value.split(/, /).map((item: string) => item.trim())
 //08051390091, 09049195356
+var error = ref(false)
+var message = ref('')
 
 const checkNumbers = async() => {
   load_check.value = 'true'
   const new_list: String[] = allowed_numbers_list.value.split(/, /).map((item: string) => item.trim())
+
+  if (new_list.length <= 1) {
+    error.value = true
+    message.value = 'Fill in all fields'
+    load_check.value = 'false'
+    return
+  }
+
   const voting_session_dict = {
     "session_name": adminvotesession.session_name,
     "code": votecode.value,
+    "open_session": false,
     "allowed_phone_numbers": new_list,
     "candidates_voted": [],
     "positions": adminvotesession.vote_positions
@@ -71,11 +82,17 @@ const checkNumbers = async() => {
         router.push('../../code')
         load_check.value = 'false'
       }
+    }else {
+      const data = await response.json()
+      if (data.status === 'Failed') {
+        load_check.value = 'false'
+        error.value = true
+        message.value = data.message
+      }
     }
-    load_check.value = 'false'
   }
-  catch(error) {
-    console.log(error)
+  catch(errors) {
+    console.log(errors)
   }
   load_check.value = 'false'
 }
@@ -102,6 +119,9 @@ const checkNumbers = async() => {
       <button class="generatecode-btn" @click="generateCode">
         <span>Generate voting code</span>
       </button>
+    </div>
+    <div class="error-message" v-if="error == true">
+      <span>{{ message }}</span>
     </div>
     <button class="continue-btn" @click="checkNumbers">
       <span v-if="load_check === 'false'">Continue</span>
@@ -152,6 +172,9 @@ const checkNumbers = async() => {
         border: 1.5px solid #121212;
         border-radius: 10px;
         resize: none;
+        font-family: 'Orbit';
+        font-size: 16px;
+        color: #121212;
       }
       .votingcode {
         border: 1.5px solid #121212;
@@ -187,6 +210,21 @@ const checkNumbers = async() => {
         margin-top: -5px;
         color: #FFFAFA;
       }
+    }
+  }
+  .error-message {
+    display: grid;
+    background-color: rgb(255,0,56, 0.1);
+    margin-top: 10px;
+    border: 1.5px solid #fe2712;
+    border-radius: 50px;
+    height: 32px;
+    justify-items: center;
+    align-content: center;
+    span {
+      margin-top: -3px;
+      font-family: 'Orbit';
+      font-size: 16px;
     }
   }
   .continue-btn {

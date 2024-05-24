@@ -1,9 +1,11 @@
 <script lang="ts" setup>
 import { ref } from "vue"
 import { useOverviewStore } from "../../../stores/overview.store";
+import { useAdminUserStore } from '../../../stores/adminuser.store';
 
+const adminuserstore = useAdminUserStore()
 const overviewstore = useOverviewStore()
-
+const config = useRuntimeConfig()
 
 useSeoMeta({
   title: 'Concord | Admin Overview'
@@ -14,9 +16,108 @@ definePageMeta({
     middleware: 'adminauth'
 })
 
+var opensession = ref(overviewstore.open_session)
+var isActive = ref<Boolean>()
+
+if (opensession.value === true) {
+    isActive.value = true
+}else if(opensession.value === false) {
+    isActive.value = false
+}
+
 const votecode = overviewstore.voting_code
 
-console.log(overviewstore.voting_code)
+const getOverviewDetails = async () => {
+    const user_data = {
+        "access_token": adminuserstore.access_token,
+        "voting_code": votecode
+    }
+    try {
+        const response = await fetch(`${config.public.LOCAL_ADMIN_OVERVIEW}`, {
+            method: 'POST',
+            body: JSON.stringify(user_data),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        if (response.ok) {
+            const data = await response.json()
+            if(data.status === 'Passed') {
+                overviewstore.saveOverviewData(data.session_name, data.open_session, data.voting_code, data.position_count, data.voters_count, data.positions, data.position_winners)
+            }
+        }
+    }catch(errors) {
+        console.log(errors)
+    }
+}
+
+getOverviewDetails()
+
+var message = ref<String|null>()
+
+const togglesession = async () => {
+    if (isActive.value === true) {
+        const admin_user_data = {
+            "access_token": adminuserstore.access_token,
+            "status": !isActive.value,
+            "voting_code": overviewstore.voting_code
+        }
+        try {
+            const response = await fetch(`${config.public.LOCAL_ADMIN_CHANGESTATUS}`, {
+                method: 'POST',
+                body: JSON.stringify(admin_user_data),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            if (response.ok) {
+                const data = await response.json()
+                if(data.status === 'Passed') {
+                    message.value = 'Session is now closed'
+                    isActive.value = false
+                    getOverviewDetails()
+                }else {
+                    const data = await response.json()
+                    if (data.status === 'Failed') {
+                        return
+                    }
+                }
+            }
+        }catch(errors) {
+            console.log(errors)
+        }
+    }else if (isActive.value === false) {
+        const admin_user_data = {
+            "access_token": adminuserstore.access_token,
+            "status": !isActive.value,
+            "voting_code": overviewstore.voting_code
+        }
+        try {
+            const response = await fetch(`${config.public.LOCAL_ADMIN_CHANGESTATUS}`, {
+                method: 'POST',
+                body: JSON.stringify(admin_user_data),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            if (response.ok) {
+                const data = await response.json()
+                if(data.status === 'Passed') {
+                    message.value = 'Session is now open'
+                    isActive.value = true
+                    getOverviewDetails()
+                }
+            }else {
+                const data = await response.json()
+                if (data.status === 'Failed') {
+                    return
+                }
+            }
+        }catch(errors) {
+            console.log(errors)
+        }
+    }
+}
 
 const copyText = () => {
     navigator.clipboard.writeText(votecode)
@@ -52,6 +153,12 @@ const voters_count = overviewstore.voters_count
                         <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 0 1-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 0 1 1.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 0 0-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 0 1-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 0 0-3.375-3.375h-1.5a1.125 1.125 0 0 1-1.125-1.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H9.75" />
                     </g>
                 </svg>
+            </button>
+        </div>
+        <div class="toggle-session">
+            <span>Turn the session on or off.</span>
+            <button @click="togglesession" :class="{'active': isActive}" class="toggle-button">
+                <span class="toggle-switch"></span>
             </button>
         </div>
         <div class="winners">
@@ -128,6 +235,52 @@ const voters_count = overviewstore.voters_count
             svg {
                 width: 24px;
                 height: 24px;
+            }
+        }
+    }
+    .toggle-session {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        span {
+            font-family: 'Orbit';
+            font-size: 18px;
+            color: #121212;
+            margin-top: -3px;
+        }
+
+        .toggle-button {
+            position: relative;
+            padding: 2px;
+            width: 60px;
+            height: 28px;
+            border: 1.5px solid #121212;
+            background-color: transparent;
+            border-radius: 50px;
+            cursor: pointer;
+            outline: none;
+            transition: background-color 0.3s ease-in-out; 
+            span {
+                position: absolute;
+                top: 4px;
+                left: 2px;
+                background-color: #121212;
+                width: 24px;
+                height: 24px;
+                border-radius: 52px;
+                transition: left 0.3s ease-in-out;
+            }
+        }
+        .active {
+            border: 0;
+            outline: 0;
+            background-color: #121212;
+            transition: background-color 0.3s ease-in-out;
+            span {
+                background-color: #FFFAFA;
+                right: 3px;
+                top: 5px;
+                left: calc(100% - 26px);
             }
         }
     }
