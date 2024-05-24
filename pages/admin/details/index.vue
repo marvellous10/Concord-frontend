@@ -21,6 +21,8 @@ definePageMeta({
 
 var voting_code = ref('')
 var load_check = ref('false')
+var error = ref(false)
+var message = ref<String|null>(null)
 
 const getOverview = async () => {
     load_check.value = 'true'
@@ -39,15 +41,22 @@ const getOverview = async () => {
         if (response.ok) {
             const data = await response.json()
             if(data.status === 'Passed') {
-                overviewstore.saveOverviewData(data.session_name, data.voting_code, data.position_count, data.voters_count, data.positions, data.position_winners)
+                overviewstore.saveOverviewData(data.session_name, data.open_session, data.voting_code, data.position_count, data.voters_count, data.positions, data.position_winners)
                 load_check.value = 'false'
                 router.push('details/overview')
             }
+            load_check.value = 'false'
+        }else {
+            const data = await response.json()
+            if (data.status === 'Failed') {
+                error.value = true
+                message.value = data.message
+            }
+            load_check.value = 'false'
         }
-        load_check.value = 'false'
     }
-    catch(error) {
-        console.log(error)
+    catch(errors) {
+        console.log(errors)
         load_check.value = 'false'
     }
 }

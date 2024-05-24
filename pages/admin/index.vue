@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import { useUserStore } from '../../stores/user.store'
 import { useAdminUserStore } from '../../stores/adminuser.store'
+import { useSelected } from '../../stores/selected.store'
 import { useRouter } from 'vue-router'
 
 const userstore = useUserStore()
@@ -42,6 +43,11 @@ const is_authenticated = computed(() => adminuserstore.access_token !== null)
         <NuxtLink to="/admin/login" class="login-container" v-if="is_authenticated == false">
             <div class="login">
                 <span>Log in</span>
+            </div>
+        </NuxtLink>
+        <NuxtLink to="/admin/signup" class="register-container" v-if="is_authenticated == false">
+            <div class="register">
+                <span>Register</span>
             </div>
         </NuxtLink>
         <NuxtLink to="admin/details" class="login-container" v-if="is_authenticated == true">
@@ -96,6 +102,28 @@ const is_authenticated = computed(() => adminuserstore.access_token !== null)
                 font-family: 'Orbit';
                 font-size: 20px;
                 color: #FFFAFA;
+                margin-top: -5px;
+            }
+        }
+    }
+    .register-container {
+        display: flex;
+        margin-top: 10px;
+        text-decoration: none;
+        div {
+            display: flex;
+            height: 48px;
+            width: 290px;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid #121212;
+            background-color: #FFFAFA;
+            border-radius: 50px;
+            span {
+                display: flex;
+                font-family: 'Orbit';
+                font-size: 20px;
+                color: #121212;
                 margin-top: -5px;
             }
         }

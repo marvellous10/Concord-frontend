@@ -31,6 +31,23 @@ const sendData = async() => {
         return
     }
 
+    const symbols = ['!', '@', '(', ')', '%', '&'];
+    var symbol_check = null as Boolean | null;
+    for (let i=0; i<symbols.length; i++) {
+        if (symbols[i] in password.value) {
+            symbol_check = true
+        }
+        else {
+            symbol_check = false
+        }
+    }
+    if (symbol_check != true) {
+        error.value = true
+        message.value = 'Include a symbol: !, @, (, ), %, & in password'
+        load_check.value = 'false'
+        return
+    }
+
     const user_data = {
         "name": name.value,
         "email": email.value,

@@ -2,8 +2,10 @@
 import { useUserStore } from '../stores/user.store'
 import { useRouter } from 'vue-router'
 import { useAdminUserStore } from '../stores/adminuser.store'
+import { useOverviewStore } from '../stores/overview.store';
 
 const userstore = useUserStore()
+const overview = useOverviewStore()
 const adminuserstore = useAdminUserStore()
 const router = useRouter()
 
@@ -101,6 +103,11 @@ useSeoMeta({
                 <span>Log in</span>
             </div>
         </NuxtLink>
+        <NuxtLink to="/signup" class="register-container" v-if="is_authenticated == false">
+            <div class="register">
+                <span>Register</span>
+            </div>
+        </NuxtLink>
         <NuxtLink to="/vote" class="login-container" v-else>
             <div class="login">
                 <span>Go to vote Session</span>
@@ -154,6 +161,28 @@ useSeoMeta({
                 font-family: 'Orbit';
                 font-size: 20px;
                 color: #FFFAFA;
+                margin-top: -5px;
+            }
+        }
+    }
+    .register-container {
+        display: flex;
+        margin-top: 10px;
+        text-decoration: none;
+        div {
+            display: flex;
+            height: 48px;
+            width: 290px;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid #121212;
+            background-color: #FFFAFA;
+            border-radius: 50px;
+            span {
+                display: flex;
+                font-family: 'Orbit';
+                font-size: 20px;
+                color: #121212;
                 margin-top: -5px;
             }
         }

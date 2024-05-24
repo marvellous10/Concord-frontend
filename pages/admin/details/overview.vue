@@ -1,9 +1,11 @@
 <script lang="ts" setup>
 import { ref } from "vue"
 import { useOverviewStore } from "../../../stores/overview.store";
+import { useAdminUserStore } from '../../../stores/adminuser.store';
 
+const adminuserstore = useAdminUserStore()
 const overviewstore = useOverviewStore()
-
+const config = useRuntimeConfig()
 
 useSeoMeta({
   title: 'Concord | Admin Overview'
@@ -11,12 +13,36 @@ useSeoMeta({
 
 definePageMeta({
     layout: 'adminnavigation',
-    middleware: 'adminauth'
+    //middleware: 'adminauth'
 })
 
 const votecode = overviewstore.voting_code
 
-console.log(overviewstore.voting_code)
+const getOverviewDetails = async () => {
+    const user_data = {
+        "access_token": adminuserstore.access_token,
+        "voting_code": votecode
+    }
+    try {
+        const response = await fetch(`${config.public.LOCAL_ADMIN_OVERVIEW}`, {
+            method: 'POST',
+            body: JSON.stringify(user_data),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        if (response.ok) {
+            const data = await response.json()
+            if(data.status === 'Passed') {
+                overviewstore.saveOverviewData(data.session_name, data.open_session, data.voting_code, data.position_count, data.voters_count, data.positions, data.position_winners)
+            }
+        }
+    }catch(errors) {
+        console.log(errors)
+    }
+}
+
+getOverviewDetails()
 
 const copyText = () => {
     navigator.clipboard.writeText(votecode)
@@ -53,6 +79,10 @@ const voters_count = overviewstore.voters_count
                     </g>
                 </svg>
             </button>
+        </div>
+        <div class="toggle-session">
+            <span>Turn the session on or off.</span>
+            <i class="fab fa-toggle-on"></i>
         </div>
         <div class="winners">
             <span>Winners</span>
