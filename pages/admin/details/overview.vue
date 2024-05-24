@@ -16,6 +16,8 @@ definePageMeta({
     middleware: 'adminauth'
 })
 
+var load_check = ref(false)
+
 var opensession = ref(overviewstore.open_session)
 var isActive = ref<Boolean>()
 
@@ -56,6 +58,7 @@ getOverviewDetails()
 var message = ref<String|null>()
 
 const togglesession = async () => {
+    load_check.value = true
     if (isActive.value === true) {
         const admin_user_data = {
             "access_token": adminuserstore.access_token,
@@ -75,16 +78,19 @@ const togglesession = async () => {
                 if(data.status === 'Passed') {
                     message.value = 'Session is now closed'
                     isActive.value = false
+                    load_check.value = false
                     getOverviewDetails()
                 }else {
                     const data = await response.json()
                     if (data.status === 'Failed') {
+                        load_check.value = false
                         return
                     }
                 }
             }
         }catch(errors) {
             console.log(errors)
+            load_check.value = false
         }
     }else if (isActive.value === false) {
         const admin_user_data = {
@@ -105,15 +111,18 @@ const togglesession = async () => {
                 if(data.status === 'Passed') {
                     message.value = 'Session is now open'
                     isActive.value = true
+                    load_check.value = false
                     getOverviewDetails()
                 }
             }else {
                 const data = await response.json()
                 if (data.status === 'Failed') {
+                    load_check.value = false
                     return
                 }
             }
         }catch(errors) {
+            load_check.value = false
             console.log(errors)
         }
     }
@@ -157,8 +166,9 @@ const voters_count = overviewstore.voters_count
         </div>
         <div class="toggle-session">
             <span>Turn the session on or off.</span>
-            <button @click="togglesession" :class="{'active': isActive}" class="toggle-button">
-                <span class="toggle-switch"></span>
+            <button @click="togglesession" :disabled="load_check==true" :class="{'active': isActive}" class="toggle-button">
+                <span class="toggle-switch">
+                </span>
             </button>
         </div>
         <div class="winners">
