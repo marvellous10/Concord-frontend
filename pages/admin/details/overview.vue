@@ -14,6 +14,8 @@ definePageMeta({
     middleware: 'adminauth'
 })
 
+var load_check = ref(true)
+
 const votecode = overviewstore.voting_code
 
 console.log(overviewstore.voting_code)
