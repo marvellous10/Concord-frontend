@@ -25,8 +25,6 @@ if (opensession.value === true) {
     isActive.value = false
 }
 
-var load_check = ref(true)
-
 const votecode = overviewstore.voting_code
 
 const getOverviewDetails = async () => {
