@@ -272,8 +272,8 @@ const voters_count = overviewstore.voters_count
             transition: background-color 0.3s ease-in-out; 
             span {
                 position: absolute;
-                top: 4px;
-                left: 2px;
+                top: 3.5px;
+                left: 1.5px;
                 background-color: #121212;
                 width: 24px;
                 height: 24px;

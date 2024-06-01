@@ -12,12 +12,19 @@
   "dependencies": {
     "@pinia/nuxt": "^0.5.1",
     "@vercel/analytics": "^1.2.2",
+    "mammoth": "^1.7.2",
     "nuxt": "^3.11.2",
+    "office-text-extractor": "^3.0.3",
+    "textract": "^2.5.0",
     "vue": "^3.4.21",
-    "vue-router": "^4.3.0"
+    "vue-router": "^4.3.0",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@pinia-plugin-persistedstate/nuxt": "^1.2.0",
+    "@types/node": "^20.13.0",
+    "@types/textract": "^2.4.5",
+    "any-text": "^1.2.0",
     "sass": "^1.75.0"
   }
 }
