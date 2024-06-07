@@ -25,7 +25,6 @@ const logout = () => {
 const sendVoteResult = async () => {
     const selected_data = {
         "selected_data": selected.selected,
-        "referral_phone_number": userstore.referral_number,
         "access_token": userstore.access_token,
         "voting_code": userstore.voting_details['code']
     }

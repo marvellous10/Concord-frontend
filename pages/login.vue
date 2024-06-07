@@ -11,14 +11,12 @@ useSeoMeta({
   title: 'Concord | Candidate Login'
 })
 
-
 definePageMeta({
     layout: 'authentication'
 })
 
 const phone_number = ref<String>('')
 const password = ref<String>('')
-const referral_number = ref<String>('')
 const voting_code = ref<String>('')
 var load_check = ref('false')
 const error = ref(false)
@@ -27,23 +25,22 @@ const message = ref('')
 const logIn = async () => {
     load_check.value = 'true'
 
-    if (phone_number.value.length == 0 || password.value.length == 0 || referral_number.value.length == 0 || voting_code.value.length == 0) {
+    if (phone_number.value.length == 0 || password.value.length == 0 || voting_code.value.length == 0) {
         error.value = true
         message.value = 'Please fill all fields'
         load_check.value = 'false'
         return
     }
-    if (password.value.length <=7) {
+    /*if (password.value.length <= 7) {
         error.value = true
         message.value = 'Password should be at least 8 characters'
         load_check.value = 'false'
         return
-    }
+    }*/
 
     const user_data = {
         "phone_number": phone_number.value,
         "password": password.value,
-        "referral_number": referral_number.value,
         "voting_code": voting_code.value
     }
     try {
@@ -57,7 +54,7 @@ const logIn = async () => {
         if (response.ok) {
             const data = await response.json()
             if (data.status === 'Passed') {
-                userstore.setUserSession(data.voting_details, data.message, data.display_name, referral_number.value)
+                userstore.setUserSession(data.voting_details, data.message, data.display_name)
                 router.push('vote')
             }
             load_check.value = 'false'
@@ -94,10 +91,10 @@ const logIn = async () => {
                 <label for="password">Password</label>
                 <input type="password" name="password" v-model="password">
             </div>
-            <div class="form-label-input">
+            <!--<div class="form-label-input">
                 <label for="referral-number">Referral number</label>
                 <input type="tel" name="referral-number" v-model="referral_number">
-            </div>
+            </div>-->
             <div class="form-label-input">
                 <label for="voting-code">Voting code</label>
                 <input type="text" name="voting-code" v-model="voting_code">
