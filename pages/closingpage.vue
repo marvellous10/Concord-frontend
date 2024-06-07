@@ -26,8 +26,9 @@ const sendVoteResult = async () => {
     const selected_data = {
         "selected_data": selected.selected,
         "access_token": userstore.access_token,
-        "voting_code": userstore.voting_details['code']
+        "voting_code": userstore.voting_details['voting_code']
     }
+    console.log(userstore.voting_details)
     try {
         const response = await fetch(`${config.public.LOCAL_CANDIDATE_VOTE}`, {
             method: 'POST',
@@ -40,6 +41,12 @@ const sendVoteResult = async () => {
             const data = await response.json()
             if (data.status === 'Passed') {
                 logout()
+            }
+        }
+        else {
+            const data = await response.json()
+            if (data.status === 'Failed') {
+                console.log(data.message)
             }
         }
     }
