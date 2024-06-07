@@ -51,7 +51,7 @@ const checkNumbers = async() => {
   new_list = allowed_numbers_list.value.split(/, /).map((item: string) => item.trim())
   console.log(new_list)
 
-  if (new_list.length <= 1) {
+  if (new_list.length < 1) {
     error.value = true
     message.value = 'Fill in all fields'
     load_check.value = 'false'
@@ -158,11 +158,11 @@ const readExcelFile = (file: File): Promise<void> => {
       var worksheet = ""
       allowed_numbers_list.value = ''
 
-      for (let i = 2; i<sheetName.length-1; i++) {
+      for (let i = 2; i<Object.keys(workbook.Sheets[sheetName]).length-1; i++) {
         const letter = i;
         const letter_cell = "A" + letter;
         worksheet = "0" + workbook.Sheets[sheetName][letter_cell]['w']
-        if (i+1 === sheetName.length-1) {
+        if (i+1 === Object.keys(workbook.Sheets[sheetName]).length-1) {
           allowed_numbers_list.value += worksheet;
         }else {
           allowed_numbers_list.value += worksheet + ', ';

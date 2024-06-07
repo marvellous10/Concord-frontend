@@ -43,7 +43,7 @@ const getOverview = async () => {
             if(data.status === 'Passed') {
                 overviewstore.saveOverviewData(data.session_name, data.open_session, data.voting_code, data.position_count, data.voters_count, data.positions, data.position_winners)
                 load_check.value = 'false'
-                router.push('details/overview')
+                router.push('../admin/details/overview')
             }
             load_check.value = 'false'
         }else {
