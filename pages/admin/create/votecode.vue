@@ -5,7 +5,7 @@ useSeoMeta({
 
 definePageMeta({
   layout: 'adminnavigation',
-  middleware: 'adminauth'
+  //middleware: 'adminauth'
 })
 
 

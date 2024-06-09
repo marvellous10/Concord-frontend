@@ -12,7 +12,7 @@ useSeoMeta({
 
 definePageMeta({
     layout: 'adminnavigation',
-    middleware: 'adminauth'
+    //middleware: 'adminauth'
 })
 
 var position_list = ref(['President'])
@@ -135,6 +135,7 @@ const checkCandidates = () => {
                     <label for="candidates">Candidates for {{ position_list[index] }}</label>
                     <textarea class="candidates-textarea" v-model="candidates_list[index]"></textarea>
                 </div>
+                <div class="candidate-picture"></div>
                 <button class="add-position-btn" @click="removePosition(index)">
                 <span>Remove position</span>
             </button>
