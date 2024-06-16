@@ -10,6 +10,7 @@ export default defineNuxtConfig({
     '~/assets/css/main.css',
   ],
   modules: [
+    '@nuxt/image',
     '@pinia/nuxt',
     '@pinia-plugin-persistedstate/nuxt',
   ],
@@ -27,6 +28,26 @@ export default defineNuxtConfig({
       LOCAL_ADMIN_OVERVIEW: process.env.LOCAL_ADMIN_OVERVIEW,
       LOCAL_ADMIN_CHANGESTATUS: process.env.LOCAL_ADMIN_CHANGESTATUS,
       LOCAL_CANDIDATE_VOTE: process.env.LOCAL_CANDIDATE_VOTE,
+
+      CONCORDBLOB_READ_WRITE_TOKEN: process.env.CONCORDBLOB_READ_WRITE_TOKEN,
+
+      AWS_S3_ACCESS_KEY_ID: process.env.AWS_S3_ACCESS_KEY_ID,
+      AWS_S3_SECRET_ACCESS_KEY: process.env.AWS_S3_SECRET_ACCESS_KEY,
+      AWS_S3_REGION: process.env.AWS_S3_REGION,
+      AWS_S3_BUCKET_NAME: process.env.AWS_S3_BUCKET_NAME,
     }
+  },
+
+  image: {
+    presets: {
+      cover: {
+        modifiers: {
+          fit: 'cover',
+          format: 'jpg',
+          width: 355,
+          height: 200,
+        },
+      },
+    },
   },
 })

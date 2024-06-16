@@ -12,7 +12,7 @@ useSeoMeta({
 
 definePageMeta({
     layout: 'adminnavigation',
-    //middleware: 'adminauth'
+    middleware: 'adminauth'
 })
 
 var position_list = ref(['President'])
@@ -81,11 +81,14 @@ const checkCandidates = () => {
         }
         position_dict['id'] = generateId()
         const new_list: String[] = candidates_list.value[i].split(/, /).map((item: string) => item.trim())
-        console.log(new_list)
         var id_list: String[] = []
         for (let j=0; j<new_list.length; j++) {
             var candidates_dict = {
                 "id": "",
+                "picture_url": {
+                    "name": "",
+                    "url": ""
+                },
                 "name": "" as String,
                 "voters": []
             }
@@ -109,7 +112,7 @@ const checkCandidates = () => {
     }
     if (error.value !== true) {
         adminvotesession.setPartialVoteSession(session_name.value, positions)
-        router.push('votecode/')
+        router.push('../create/images')
     }
 }
 
