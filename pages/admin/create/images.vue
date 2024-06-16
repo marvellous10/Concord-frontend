@@ -283,6 +283,7 @@ const continueToNextPage = async () => {
                 display: flex;
                 align-items: center;
                 justify-content: left;
+                transition: display 0.2s ease-in;
                 cursor: pointer;
                 input[type="file"] {
                     display: none;
@@ -304,7 +305,7 @@ const continueToNextPage = async () => {
                 display: flex;
                 align-items: end;
                 justify-content: center;
-                transition: 0.2s ease-in;
+                transition: display 0.2s ease-in;
                 .picture {
                     position: absolute;
                     height: 100%;

@@ -83,7 +83,7 @@ const checkNumbers = async() => {
     if (response.ok) {
       const data = await response.json()
       if (data.status === 'Passed') {
-        router.push('../../code')
+        router.push('../code')
         load_check.value = 'false'
       }
     }else {
