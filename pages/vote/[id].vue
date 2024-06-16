@@ -33,7 +33,7 @@ for (let i=0; i<positions_list.length; i++) {
 }
 
 useSeoMeta({
-  title: `Concord | {positions}`
+  title: `Concord | ${positions}`
 })
 
 for (let i=1; i<positions_list.length;i++) {
@@ -46,10 +46,12 @@ for (let i=0; i<positions_list.length;i++) {
         for (let j=0; j<positions_list[i]['candidates'].length; j++) {
             const cand_dict = {
                 "id": "",
-                "name": ""
+                "name": "",
+                "picture_url": "",
             }
             cand_dict['id'] = positions_list[i]['candidates'][j]['id']
             cand_dict['name'] = positions_list[i]['candidates'][j]['name']
+            cand_dict['picture_url'] = positions_list[i]['candidates'][j]['picture_url']['url']
             candidates_list.push(cand_dict)
         }
         break
@@ -103,8 +105,11 @@ const continueButton = () => {
             <span>Select your preferred candidate for {{ positions }}</span>
         </div>
         <div class="choices">
-            <div class="option" value="One" v-for="(candidate, index) in candidates_list" :key="candidate.id" @click="printValue(candidate.id)" :class="{ 'selected': valueread === candidate.id}">
-                <span>{{ candidate.name }}</span>
+            <div class="option" value="One" v-for="(candidate, index) in candidates_list" :key="candidate.id" @click="printValue(candidate.id)">
+                <NuxtImg class="image" :src="candidate.picture_url" quality="80" />
+                <div class="c-name" :class="{ 'selected': valueread === candidate.id}">
+                    <span>{{ candidate.name }}</span>
+                </div>
             </div>
         </div>
         <div class="back-next-buttons">
@@ -122,12 +127,6 @@ const continueButton = () => {
 </template>
 
 <style lang="scss" scoped>
-.selected {
-    background-color: #121212;
-    span {
-        color: #FFFAFA;
-    }
-}
 .voting-page {
     width: 360px;
     display: grid;
@@ -150,19 +149,45 @@ const continueButton = () => {
         row-gap: 20px;
         div {
             cursor: pointer;
+            position: relative;
             border: 1.5px solid #121212;
-            width: 350px;
-            padding-left: 10px;
-            height: 32px;
+            width: 355px;
+            height: 200px;
             display: flex;
-            align-items: center;
-            justify-content: left;
-            border-radius: 50px;
-            span {
+            border-radius: 10px;
+            overflow: hidden;
+            align-items: end;
+            justify-content: center;
+            .image {
+                position: absolute;
+                height: 100%;
+                width: 100%;
+                max-height: 100%;
+                max-width: 100%;
                 display: flex;
-                font-family: 'Orbit';
-                font-size: 16px;
-                margin-top: -5px;
+                border-radius: 0px;
+            }
+            .c-name {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                border: 1.5px solid #121212;
+                background-color: #FFFAFA;
+                border-radius: 5px;
+                width: 345px;
+                height: 42px;
+                margin-bottom: 5px;
+                z-index: 10;
+                transition: background-color 0.2s ease-in;
+                span {
+                    font-family: 'Orbit';
+                    font-size: 16px;
+                    color: #121212;
+                    width: 300px;
+                    height: auto;
+                    margin-left: 10px;
+                    margin-top: -3px;
+                }
             }
 
         }
@@ -214,6 +239,15 @@ const continueButton = () => {
         margin: 0 auto;
         position: relative;
         top: 15vh;
+    }
+}
+
+.selected {
+    background-color: #121212 !important;
+    border: 1.5px solid #FFFAFA !important;
+    transition: background-color 0.2s ease-in;
+    span {
+        color: #FFFAFA !important;
     }
 }
 </style>
