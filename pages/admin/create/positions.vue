@@ -81,11 +81,14 @@ const checkCandidates = () => {
         }
         position_dict['id'] = generateId()
         const new_list: String[] = candidates_list.value[i].split(/, /).map((item: string) => item.trim())
-        console.log(new_list)
         var id_list: String[] = []
         for (let j=0; j<new_list.length; j++) {
             var candidates_dict = {
                 "id": "",
+                "picture_url": {
+                    "name": "",
+                    "url": ""
+                },
                 "name": "" as String,
                 "voters": []
             }
@@ -109,7 +112,7 @@ const checkCandidates = () => {
     }
     if (error.value !== true) {
         adminvotesession.setPartialVoteSession(session_name.value, positions)
-        router.push('votecode/')
+        router.push('../create/images')
     }
 }
 
@@ -135,6 +138,7 @@ const checkCandidates = () => {
                     <label for="candidates">Candidates for {{ position_list[index] }}</label>
                     <textarea class="candidates-textarea" v-model="candidates_list[index]"></textarea>
                 </div>
+                <div class="candidate-picture"></div>
                 <button class="add-position-btn" @click="removePosition(index)">
                 <span>Remove position</span>
             </button>
