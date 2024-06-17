@@ -133,6 +133,7 @@ const continueButton = () => {
     justify-items: center;
     align-content: start;
     row-gap: 20px;
+    padding-bottom: 30px;
     .voting-page-title {
         display: flex;
         width: 330px;
@@ -164,6 +165,7 @@ const continueButton = () => {
                 width: 100%;
                 max-height: 100%;
                 max-width: 100%;
+                object-fit: cover;
                 display: flex;
                 border-radius: 0px;
             }
@@ -194,6 +196,7 @@ const continueButton = () => {
     }
     .back-next-buttons {
         width: 360px;
+        margin-top: 20px;
         display: flex;
         justify-content: space-between;
         button {
@@ -238,7 +241,7 @@ const continueButton = () => {
     .voting-page {
         margin: 0 auto;
         position: relative;
-        top: 15vh;
+        top: 5vh;
     }
 }
 

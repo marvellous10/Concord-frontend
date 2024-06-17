@@ -38,7 +38,7 @@ export default defineNuxtConfig({
     }
   },
 
-  image: {
+  /*image: {
     presets: {
       cover: {
         modifiers: {
@@ -49,5 +49,5 @@ export default defineNuxtConfig({
         },
       },
     },
-  },
+  },*/
 })
