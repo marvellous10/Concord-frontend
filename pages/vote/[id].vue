@@ -241,7 +241,7 @@ const continueButton = () => {
     .voting-page {
         margin: 0 auto;
         position: relative;
-        top: 5vh;
+        top: 1vh;
     }
 }
 
