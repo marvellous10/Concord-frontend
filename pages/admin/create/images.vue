@@ -194,7 +194,7 @@ const continueToNextPage = async () => {
                 </div>
                 <div class="error" v-if="position_check_list[index].candidates[cindex].error == true"><span>{{ message }}</span></div>
                 <div class="picture-preview" v-if="position_check_list[index].candidates[cindex].preview == true && position_check_list[index].candidates[cindex].error == false">
-                        <NuxtImg class="picture" quality="80" preset="cover" :src="candidates.picture_url.url" densities="x1 x2" />
+                        <NuxtImg class="picture" quality="80" :src="candidates.picture_url.url" densities="x1 x2" />
                         <div class="picture-text">
                             <span>{{ candidates.picture_url.name }}</span>
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="#121212" class="size-6 close" @click="removefiles(index, candidates.id)">
@@ -220,6 +220,9 @@ const continueToNextPage = async () => {
     align-content: start;
     justify-items: center;
     row-gap: 10px;
+    margin: 0 auto;
+    margin-top: -30px;
+    padding-bottom: 30px;
     .header {
         text-align: center;
         span {
@@ -312,6 +315,7 @@ const continueToNextPage = async () => {
                     width: 100%;
                     max-height: 100%;
                     max-width: 100%;
+                    object-fit: cover;
                     display: flex;
                     border-radius: 0px;
                 }
@@ -364,4 +368,5 @@ const continueToNextPage = async () => {
         }
     }
 }
+@media only screen and (max-width: 460px) {}
 </style>
