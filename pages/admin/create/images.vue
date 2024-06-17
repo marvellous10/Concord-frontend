@@ -12,10 +12,10 @@ useSeoMeta({
   title: 'Concord | Admin Create Positions'
 })
 
-definePageMeta(
+definePageMeta({
     layout: 'adminnavigation',
     middleware: 'adminauth'
-)
+})
 
 const load = ref(false)
 
