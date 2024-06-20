@@ -95,7 +95,10 @@ const backButton = () => {
     router.push(`/vote/${index_id}`)
 }
 const continueButton = () => {
-    if (selected.selected.length != selected.page_index) {
+    console.log(selected.selected.length)
+    console.log(length_positions)
+    if (selected.selected.length != length_positions) {
+        console.log("Error")
         return
     }else {
         router.push('/closingpage')
@@ -124,7 +127,7 @@ const continueButton = () => {
                 <span>Next</span>
             </button>
         </div>
-        <button v-if="page_index == length_positions-1" @click="continueButton" class="con-btn">
+        <button v-if="page_index == length_positions-1 || selected.selected.length === length_positions" @click="continueButton" class="con-btn">
             <span>Continue</span>
         </button>
     </div>
