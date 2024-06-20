@@ -108,10 +108,21 @@ const checkCandidates = () => {
                 position_dict['candidates'].push(candidates_dict)
             }
         }
+        var candidates_dict = {
+            "id": "decline",
+            "picture_url": {
+                "name": "decline to vote",
+                "url": "https://concordvotebucket.s3.us-east-2.amazonaws.com/declinetovoteimage.png"
+            },
+            "name": "Decline to vote" as String,
+            "voters": []
+        }
+        position_dict['candidates'].push(candidates_dict)
         positions.push(position_dict)
     }
     if (error.value !== true) {
         adminvotesession.setPartialVoteSession(session_name.value, positions)
+        console.log(positions)
         router.push('../create/images')
     }
 }

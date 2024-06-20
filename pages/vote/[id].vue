@@ -100,9 +100,8 @@ const continueButton = () => {
     if (selected.selected.length != length_positions) {
         console.log("Error")
         return
-    }else {
-        router.push('/closingpage')
     }
+    router.push('/closingpage')
 }
 </script>
 
