@@ -97,8 +97,9 @@ const backButton = () => {
 const continueButton = () => {
     if (selected.selected.length != selected.page_index) {
         return
+    }else {
+        router.push('/closingpage')
     }
-    router.push('/closingpage')
 }
 </script>
 
