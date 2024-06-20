@@ -95,7 +95,11 @@ const backButton = () => {
     router.push(`/vote/${index_id}`)
 }
 const continueButton = () => {
-    router.push('/closingpage')
+    if (selected.selected.length != selected.page_index) {
+        return
+    }else {
+        router.push('/closingpage')
+    }
 }
 </script>
 

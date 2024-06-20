@@ -60,7 +60,7 @@ var message = ref<String|null>()
 const togglesession = async () => {
     load_check.value = true
     if (isActive.value === true) {
-        const admin_user_data = {
+        /*const admin_user_data = {
             "access_token": adminuserstore.access_token,
             "status": !isActive.value,
             "voting_code": overviewstore.voting_code
@@ -91,7 +91,8 @@ const togglesession = async () => {
         }catch(errors) {
             console.log(errors)
             load_check.value = false
-        }
+        }*/
+       return
     }else if (isActive.value === false) {
         const admin_user_data = {
             "access_token": adminuserstore.access_token,
